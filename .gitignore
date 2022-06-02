@@ -1,0 +1,6 @@
+*.plist
+.cache
+config/keys
+config/preventkeys
+build
+compile_commands.json

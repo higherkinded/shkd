@@ -1,0 +1,35 @@
+================================================================================
+
+                                 _/       _/            _/
+                                _/       _/            _/
+                      _/_/_/_/ _/_/_/   _/  _/    _/_/_/
+                       _/     _/    _/ _/_/    _/    _/
+                        _/   _/    _/ _/  _/  _/    _/
+                   _/_/_/_/ _/    _/ _/    _/  _/_/_/
+
+================================================================================
+
+shkd - Static HotKey Daemon. Like sxhkd but even smaller.
+
+--------------------------------------------------------------------------------
+
+0. DEPENDENCIES
+
+You gotta have `xlib` and its headers ready.
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+1. BUILDING
+
+Just run `make`. That cuts it. It creates an installation image in `build/img`
+directory and you can either go with the default `make install` recipe or do the
+installation your own way.
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+2. CONFIGURATION
+
+Consult `config/keys.def` for examples. If you want to configure modifiers, do
+so in `config/preventkeys`.
+
+================================================================================

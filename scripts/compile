@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+POSITIONAL="CXX SRCDIR OBJDIR FILE"
+
+for arg in $POSITIONAL; do
+    eval "${arg}=$1"
+    shift
+done
+
+FLAGS="$@"
+
+OBJF="$(printf "%s.o" "$FILE" | sed -e "s:$SRCDIR:$OBJDIR:")"
+OBJD="$(dirname "$OBJF")"
+
+if [ ! -d "$OBJD" ]; then
+    printf "[dir] %s\n" "$OBJD" >&2
+    mkdir -p "$OBJD"
+fi
+
+printf "[cxx] %s -> %s\n" "$FILE" "$OBJF" >&2
+exec ${CXX} ${FLAGS} -c ${FILE} -o ${OBJF}

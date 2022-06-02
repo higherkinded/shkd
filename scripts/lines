@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+FILES="$(find $@ -type f)"
+
+if [ -z "$FILES" ]; then
+    printf "No files\n"
+    exit 0
+fi
+
+total=0
+
+for f in $FILES; do
+    lines=$(sed '/^$/d' $f | wc -l)
+    total=$(( $total + $lines ))
+    printf "%4d %s\n" $lines $f
+done
+
+printf "%4d total\n" $total
