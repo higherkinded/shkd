@@ -42,7 +42,8 @@ options:
 rebuild: clean all
 
 ${CNFDIR}/%: ${CNFDIR}/%.def
-	cp $< $@
+	@echo "[def] $<"
+	@cp $< $@
 
 ${EXE}: ${OBJ}
 	@\
@@ -52,6 +53,10 @@ ${EXE}: ${OBJ}
 	fi
 	@echo "[lnk] $@" >&2
 	@${CXX} ${_LDFLAGS} -o $@ ${OBJ}
+
+${SRCDIR}/main.cc: ${CNFDIR}/keys
+
+${SRCDIR}/keyboard/internal.cc: ${CNFDIR}/preventkeys
 
 ${OBJDIR}/%.cc.o: ${SRCDIR}/%.cc
 	@scripts/compile ${CXX} ${SRCDIR} ${OBJDIR} $< ${_CXXFLAGS}

@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+IMGDIR="$1"
+PREFIX="$2"
+
+if [ -z "$IMGDIR" ]; then
+    printf "Image source is empty\n" >&2
+    exit 1
+fi
+
+if [ ! -d "$IMGDIR" ]; then
+    printf "Image source is not a directoryt\n" >&2
+    exit 1
+fi
+
+if [ -z "$PREFIX" ]; then
+    printf "Prefix is empty\n" >&2
+    exit 1
+fi
+
+if [ ! -d "$PREFIX" ]; then
+    printf "Prefix is not a directory\n" >&2
+    exit 1
+fi
+
+FILES="$(cd $IMGDIR && find . -type f | sed -e 's:\./::')"
+
+for f in $FILES; do
+    printf "[ins] %s -> %s\n" "$IMGDIR/$f" "$PREFIX/$f" >&2
+    install -D "$IMGDIR/$f" "$PREFIX/$f"
+done

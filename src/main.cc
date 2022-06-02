@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <X11/keysym.h>
+#include <X11/XF86keysym.h>
 #include <unistd.h>
 
 #include "keyboard/internal.hh"
