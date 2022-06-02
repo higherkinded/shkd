@@ -27,6 +27,7 @@ _LDFLAGS = \
 .PHONY: \
 	all     \
 	clean   \
+	install \
 	lines   \
 	options \
 	rebuild
@@ -68,3 +69,6 @@ clean:
 	        rm -f $$f;                          \
 	    done;                                   \
 	fi
+
+install:
+	@scripts/install ${IMGDIR} ${INSTALLPREFIX}

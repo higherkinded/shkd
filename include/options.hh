@@ -20,7 +20,7 @@ namespace o {
     { "-n", "--no-daemon", "Stay attached to the invoking terminal." };
 
     constexpr option silent
-    { "-s", "--silent",    "Stay attached to the invoking terminal." };
+    { "-s", "--silent",    "Shut up and close the output descriptors." };
 
     constexpr option help
     { "-h", "--help",      "Show this message." };
