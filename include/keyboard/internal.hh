@@ -65,9 +65,9 @@ namespace intkb {
 
         public:
             kstate(
-                    Display *display,
-                    const std::vector<kseq> &sequences
-                  ) noexcept;
+                Display *display,
+                const std::vector<kseq> &sequences
+            ) noexcept;
 
             auto next() noexcept -> bool;
     };

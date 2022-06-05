@@ -86,9 +86,8 @@ void kstate::ungrab() const noexcept {
 }
 
 void kstate::grab_root() const noexcept {
-    for (const auto &[ k, _ ] : root->keys) {
-        XGrabKey(display, k.kc, k.mask, rootwin, true, GrabModeAsync, GrabModeAsync);
-    }
+    for (const auto &[ k, _ ] : root->keys) XGrabKey(
+        display, k.kc, k.mask, rootwin, true, GrabModeAsync, GrabModeAsync);
 }
 
 void kstate::grab_all() const noexcept {
