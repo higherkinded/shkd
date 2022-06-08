@@ -4,7 +4,7 @@ EXENAME ?= shkd
 BUILDROOT ?= build
 INSTALLPREFIX ?= /usr/local
 
-CXX ?= cpp
+CXX ?= c++
 
 CXXFLAGS ?= -O3 -Wall
 LDFLAGS  ?=
