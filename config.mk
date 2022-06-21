@@ -1,4 +1,4 @@
-VERSION = 1.2-dev
+VERSION = 1.2
 
 EXENAME ?= shkd
 BUILDROOT ?= build
