@@ -27,13 +27,6 @@ namespace intkb {
         auto operator==(const key &k) const noexcept -> bool;
     };
 
-    struct kseq {
-        std::vector<key> sequence = {};
-        char *const *command;
-
-        kseq(const dsl::kgrp &grp, Display *dsp) noexcept;
-    };
-
     class kstate {
         private:
             struct knode {
@@ -61,7 +54,7 @@ namespace intkb {
         public:
             kstate(
                 Display *display,
-                const std::vector<kseq> &sequences
+                const std::vector<dsl::kgrp> &sequences
             ) noexcept;
 
             auto next() noexcept -> bool;

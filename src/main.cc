@@ -29,10 +29,7 @@ auto main(int argc, char **argv) noexcept -> int {
         #include "keys"
     };
 
-    std::vector<intkb::kseq> kseqs;
-    for (const auto &grp : keys) kseqs.emplace_back(grp, display);
-
-    intkb::kstate state(display, kseqs);
+    intkb::kstate state(display, keys);
     for (;;) state.next();
 }
 

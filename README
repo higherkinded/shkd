@@ -32,4 +32,16 @@ installation your own way.
 Consult `config/keys.def` for examples. If you want to configure modifiers, do
 so in `config/preventkeys`.
 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+3. SIZE
+
+Current size on x86_64, glibc and libstdc++ without any configuration is ~40K
+bytes. Maybe less on 32-bit systems. Every line of configuration you insert adds
+to this, though not too much. Any attemtps at golfing it even further down are
+much appreciated. Not sure why I do it but it's fun.
+
+If you want to check your size optimization, you may use `make size` to get the
+byte count.
+
 ================================================================================

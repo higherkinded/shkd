@@ -24,39 +24,32 @@ auto key::operator==(const key &k) const noexcept -> bool {
     return (kc == k.kc) && (mask == k.mask);
 }
 
-kseq::kseq(const dsl::kgrp &grp, Display *dsp) noexcept {
-    // No exception handler. The program is so tiny that it won't matter. Ever.
-    auto cmd = new std::vector<const char *>;
-    for (const auto &arg : grp.command) cmd->push_back(arg.c_str());
-    cmd->push_back(nullptr);
-
-    std::vector<key> keys;
-    for (auto &key : grp.keys) keys.emplace_back(
-        XKeysymToKeycode(dsp, key.ks), key.mask);
-
-    sequence = keys;
-    command = (char *const *) cmd->data();
-}
-
 kstate::kstate(
     Display *display,
-    const std::vector<kseq> &sequences
+    const std::vector<dsl::kgrp> &sequences
 ) noexcept: display(display), rootwin(XDefaultRootWindow(display)) {
     if (sequences.empty()) util::die(
         exit_code::NO_SEQUENCES, "No sequences to handle");
 
-    for (const auto &keys : sequences) {
-        if (!keys.command || !keys.command[0]) continue;
+    for (const auto &sequence : sequences) {
+        if (!sequence.command.size()) continue;
+
+        // No exception handler. The program is so tiny that it won't matter. Ever.
+        auto cmd = new std::vector<const char *>;
+        for (const auto &arg : sequence.command) cmd->push_back(arg.c_str());
+        cmd->push_back(nullptr);
 
         auto cur = root;
 
-        for (const auto &k : keys.sequence) {
+        for (const auto &symkey : sequence.keys) {
+            key k{ XKeysymToKeycode(display, symkey.ks), symkey.mask };
+
             // No exception handler. shkd is virtually zero-cost.
-            cur->keys.insert({k, new knode()});
+            cur->keys.insert({ k, new knode() });
             cur = cur->keys[k];
         }
 
-        cur->command = keys.command;
+        cur->command = (char *const *) cmd->data();
     }
 
     reset();

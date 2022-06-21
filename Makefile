@@ -65,6 +65,9 @@ ${OBJDIR}/%.cc.o: ${SRCDIR}/%.cc
 lines:
 	@scripts/lines ${SRCDIR} ${INCDIR}
 
+size: all
+	@cat ${EXE} | wc -c
+
 clean:
 	@ \
 	if [ -d "${BUILDROOT}" ]; then              \
