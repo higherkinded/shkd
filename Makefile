@@ -16,6 +16,7 @@ LIBS = x11
 
 _CXXFLAGS = \
 		   -std=c++20 \
+		   -fno-exceptions \
 		   -DEXENAME=\"${EXENAME}\" -DVERSION=\"${VERSION}\" \
 		   ${shell pkg-config --cflags ${LIBS}} \
 		   ${CXXFLAGS} -I${INCDIR} -I${CNFDIR}

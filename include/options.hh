@@ -6,7 +6,7 @@ struct options {
     bool help      = false;
     bool loud      = true;
 
-    options(int argc, char **argv);
+    options(int argc, char **argv) noexcept;
 };
 
 struct option {

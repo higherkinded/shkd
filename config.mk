@@ -1,4 +1,4 @@
-VERSION = 1.1
+VERSION = 1.2-dev
 
 EXENAME ?= shkd
 BUILDROOT ?= build
@@ -6,5 +6,5 @@ INSTALLPREFIX ?= /usr/local
 
 CXX ?= c++
 
-CXXFLAGS ?= -O3 -Wall
+CXXFLAGS ?= -Os -s -Wall -static -nostartfiles -e main
 LDFLAGS  ?=

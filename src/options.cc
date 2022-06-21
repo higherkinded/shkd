@@ -2,10 +2,13 @@
 #include <stdexcept>
 #include <vector>
 
+#include "constants.hh"
 #include "options.hh"
+#include "util.hh"
 
-options::options(int argc, char **argv) {
-    if (argc > 64) throw std::runtime_error(
+options::options(int argc, char **argv) noexcept {
+    if (argc > 64) util::die(
+        exit_code::OPTIONS_ERR,
         "Fuzzing a hotkey daemon's argv earns you a place in Santa's naughty "
         "list. You should reconsider the decision you're making before getting "
         "a lump of coal in your Christmas sock."
@@ -15,9 +18,10 @@ options::options(int argc, char **argv) {
     std::set<std::string> encountered;
 
     for (const auto &arg : args) {
-        if (encountered.contains(arg)) {
-            throw std::runtime_error("Duplicate argument: '" + arg + "'");
-        }
+        if (encountered.contains(arg)) util::die(
+            exit_code::OPTIONS_ERR,
+            "Duplicate argument: '" + arg + "'"
+        );
 
         if (arg == "-n" || arg == "--no-daemon") {
             daemonize = false;
@@ -41,6 +45,6 @@ options::options(int argc, char **argv) {
             continue;
         }
 
-        throw std::runtime_error("Unknown argument: '" + arg + "'");
+        util::die(exit_code::OPTIONS_ERR, "Unknown argument: '" + arg + "'");
     }
 }
