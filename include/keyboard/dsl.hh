@@ -25,7 +25,7 @@ namespace dsl {
         keysym  ks;
         uint8_t mask;
 
-        k(keysym ks, uint8_t mask = 0) noexcept: ks(ks), mask(mask) {}
+        constexpr k(keysym ks, uint8_t mask = 0): ks(ks), mask(mask) {}
     };
 
     struct kgrp {

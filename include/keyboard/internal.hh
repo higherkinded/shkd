@@ -20,8 +20,8 @@ namespace intkb {
         uint8_t mask;
 
         key() noexcept: kc(0), mask(0) {}
-        key(keyevent &ev) noexcept: kc(ev.keycode), mask(ev.state) {}
-        key(keycode kc, uint8_t mask = 0) noexcept: kc(kc), mask(mask) {}
+        key(keyevent &ev): kc(ev.keycode), mask(ev.state) {}
+        key(keycode kc, uint8_t mask = 0): kc(kc), mask(mask) {}
 
         auto operator<(const key &k)  const noexcept -> bool;
         auto operator==(const key &k) const noexcept -> bool;
