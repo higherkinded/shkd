@@ -62,33 +62,20 @@ kstate::kstate(
     reset();
 }
 
-auto kstate::knode::last() const noexcept -> bool {
-    return !keys.size();
-}
-
 void kstate::reset() noexcept {
-    if (&current != &root) ungrab();
-    grab_root();
+    if (&current != &root) { // Ungrab all
+        XUngrabKeyboard(display, CurrentTime);
+        XUngrabKey(display, AnyKey, AnyModifier, rootwin);
+    }
+
+    // Grab root
+    for (const auto &[ k, _ ] : root->keys) XGrabKey(
+        display, k.kc, k.mask, rootwin, true, GrabModeAsync, GrabModeAsync);
     in_root = true;
     current = root;
 }
 
-void kstate::ungrab() const noexcept {
-    XUngrabKeyboard(display, CurrentTime);
-    XUngrabKey(display, AnyKey, AnyModifier, rootwin);
-}
-
-void kstate::grab_root() const noexcept {
-    for (const auto &[ k, _ ] : root->keys) XGrabKey(
-        display, k.kc, k.mask, rootwin, true, GrabModeAsync, GrabModeAsync);
-}
-
-void kstate::grab_all() const noexcept {
-    XGrabKeyboard(
-        display, rootwin, true, GrabModeAsync, GrabModeAsync, CurrentTime);
-}
-
-void kstate::exec() noexcept {
+inline void kstate::exec() noexcept {
     // Check command for at least one word and fork the execution parent
     if (current->command && current->command[0] && !fork()) {
         if (execvp(current->command[0], current->command)) {
@@ -103,7 +90,7 @@ void kstate::exec() noexcept {
 
             util::warn(message.str());
         }
-    } else reset(); // Reset in parent process 
+    } else reset(); // Reset in parent process
 }
 
 void kstate::push(const key &k) noexcept {
@@ -113,9 +100,11 @@ void kstate::push(const key &k) noexcept {
     current = next->second;
     in_root = false;
 
-    if (current->last()) return exec();
+    if (!current->keys.size()) return exec();
 
-    grab_all();
+    // Grab all
+    XGrabKeyboard(
+        display, rootwin, true, GrabModeAsync, GrabModeAsync, CurrentTime);
 }
 
 auto kstate::allow_event(const XEvent &ev) -> bool {

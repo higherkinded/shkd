@@ -6,5 +6,5 @@ INSTALLPREFIX ?= /usr/local
 
 CXX ?= c++
 
-CXXFLAGS ?= -Os -s -Wall -static -nostartfiles -e main
+CXXFLAGS ?= -Os -s -Wall -static -nostartfiles -e main -fno-PIC
 LDFLAGS  ?=

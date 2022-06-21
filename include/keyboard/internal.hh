@@ -37,11 +37,10 @@ namespace intkb {
     class kstate {
         private:
             struct knode {
-                std::map<key, knode *> keys;
+                std::map<key, knode *> keys{};
                 char *const *command = nullptr;
 
-                knode() noexcept: keys{}, command(nullptr) {}
-                auto last() const noexcept -> bool;
+                knode() = default;
             };
 
             Display *display;
@@ -54,14 +53,10 @@ namespace intkb {
             bool in_root = true;
             auto allow_event(const XEvent &ev) -> bool;
 
-            void grab_all()  const noexcept;
-            void grab_root() const noexcept;
-            void ungrab()    const noexcept;
-
             void push(const key &k) noexcept;
 
             void reset() noexcept;
-            void exec()  noexcept;
+            inline void exec()  noexcept;
 
         public:
             kstate(
