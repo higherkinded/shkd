@@ -1,5 +1,4 @@
-#include <iostream>
-#include <stdexcept>
+#include <cerrno>
 #include <vector>
 
 #include <unistd.h>
@@ -11,6 +10,7 @@
 #include "constants.hh"
 #include "keyboard/internal.hh"
 #include "options.hh"
+#include "types.hh"
 #include "util.hh"
 
 inline void handle_options(int argc, char **argv);
@@ -56,7 +56,7 @@ void sigchld(int _) {
 
 inline void install_handler(int sig, void (&handler)(int)) {
     if (signal(sig, handler) == SIG_ERR) util::die(exit_code::SIGNAL_ERR,
-        "Cannot install a signal handler for signal " + std::to_string(sig));
+        "Cannot install a signal handler for signal %d", sig);
 }
 
 inline void install_sig_handlers() {

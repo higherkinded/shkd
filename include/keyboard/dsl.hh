@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include <vector>
 
 #include <X11/X.h>
@@ -30,6 +29,6 @@ namespace dsl {
 
     struct kgrp {
         std::vector<k> keys;
-        std::vector<std::string> command;
+        std::vector<const char *> command;
     };
 } // namespace dsl

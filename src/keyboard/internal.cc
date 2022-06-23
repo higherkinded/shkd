@@ -1,9 +1,8 @@
 #include "keyboard/internal.hh"
 
+#include <cerrno>
+#include <cstdio>
 #include <cstring>
-#include <exception>
-#include <set>
-#include <sstream>
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
@@ -36,7 +35,7 @@ kstate::kstate(
 
         // No exception handler. The program is so tiny that it won't matter. Ever.
         auto cmd = new std::vector<const char *>;
-        for (const auto &arg : sequence.command) cmd->push_back(arg.c_str());
+        for (const auto &arg : sequence.command) cmd->push_back(arg);
         cmd->push_back(nullptr);
 
         auto cur = root;
@@ -64,7 +63,6 @@ void kstate::reset() noexcept {
     // Grab root
     for (const auto &[ k, _ ] : root->keys) XGrabKey(
         display, k.kc, k.mask, rootwin, true, GrabModeAsync, GrabModeAsync);
-    in_root = true;
     current = root;
 }
 
@@ -72,16 +70,14 @@ inline void kstate::exec() noexcept {
     // Check command for at least one word and fork the execution parent
     if (current->command && current->command[0] && !fork()) {
         if (execvp(current->command[0], current->command)) {
-            std::stringstream message;
+            util::warn("Failed to run command:");
+            std::fputc('`', stderr);
 
-            message << "Failed to run `";
-            for (char *const *arg = current->command; arg;) {
-                message << arg;
-                if (++arg) message << ' ';
+            for (char *const *arg = current->command; arg++;) {
+                std::fprintf(stderr, " %s", (char *) arg);
             }
-            message << "` (" << strerror(errno) << ')';
 
-            util::warn(message.str());
+            std::fprintf(stderr, "`: %s\n", strerror(errno));
         }
     } else reset(); // Reset in parent process
 }
@@ -91,8 +87,6 @@ void kstate::push(const key &k) noexcept {
     if (next == current->keys.end()) return reset();
 
     current = next->second;
-    in_root = false;
-
     if (!current->keys.size()) return exec();
 
     // Grab all
@@ -100,16 +94,19 @@ void kstate::push(const key &k) noexcept {
         display, rootwin, true, GrabModeAsync, GrabModeAsync, CurrentTime);
 }
 
-auto kstate::allow_event(const XEvent &ev) -> bool {
-    static const std::set<KeySym> prevented {
+inline auto kstate::allow_event(const XEvent &ev) -> bool {
+    static const KeySym prevented[] {
         #include "preventkeys"
+        0
     };
 
     if (ev.type != KeyPress) return false;
 
     const auto &kev = ev.xkey;
-    if (!current->keys.contains(kev.keycode)) return !prevented.contains(
-        XkbKeycodeToKeysym(display, kev.keycode, 0, 0));
+    if (!current->keys.contains(kev.keycode)) {
+        auto ks = XkbKeycodeToKeysym(display, kev.keycode, 0, 0);
+        for (int i = 0; prevented[i]; i++) if (prevented[i] == ks) return false;
+    }
 
     return true;
 }

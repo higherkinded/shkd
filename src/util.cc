@@ -1,35 +1,46 @@
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
 
 #include "options.hh"
 #include "util.hh"
 
-void util::banner() noexcept {
-    std::cerr << EXENAME << " v" << VERSION << std::endl;
+void util::banner() {
+    std::fprintf(stderr, "%s v%s\n", EXENAME, VERSION);
 }
 
-void util::warn(const std::string &message) noexcept {
-    std::cerr << EXENAME << " [log] " << message << std::endl;
+void util::warn(const char *fmt, ...) {
+    va_list args;
+
+    std::fprintf(stderr, "%s [warn]", EXENAME);
+
+    va_start(args, fmt);
+    std::vfprintf(stderr, fmt, args);
+    va_end(args);
+
+    std::fputc('\n', stderr);
 }
 
-void util::die(int exitcode, const std::string &reason) noexcept {
-    std::cerr << EXENAME << " [die(" << exitcode << ")]";
+void util::die(int exitcode, const char *fmt, ...) {
+    va_list args;
 
-    if (!!reason.size()) std::cerr << " " << reason;
-    if (errno) std::cerr << " " << "(err: " << strerror(errno) << ")";
+    std::fprintf(stderr, "%s [die(%d)]", EXENAME, exitcode);
 
-    std::cerr << std::endl;
+    va_start(args, fmt);
+    std::vfprintf(stderr, fmt, args);
+    va_end(args);
+
+    std::fputc('\n', stderr);
+
     std::exit(exitcode);
 }
 
-void util::help() noexcept {
+void util::help() {
     std::fprintf(stderr, "Usage: %s [OPTIONS]\n", EXENAME);
 
-    for (int i = 0; i < o::count; i++) {
-        const option &opt = o::all[i];
+    for(const auto & opt : o::all) {
         std::fprintf(stderr, "  %s %-11s %s\n",
-            opt.short_switch, opt.long_switch, opt.description);
+                opt.short_switch, opt.long_switch, opt.description);
     }
 }

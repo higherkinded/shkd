@@ -1,10 +1,12 @@
-#include <set>
-#include <stdexcept>
-#include <vector>
+#include <cstring>
 
 #include "constants.hh"
 #include "options.hh"
 #include "util.hh"
+
+static auto match(const char *arg, const option &o) -> bool {
+    return !strcmp(arg, o.short_switch) || !strcmp(arg, o.long_switch);
+}
 
 options::options(int argc, char **argv) noexcept {
     if (argc > 64) util::die(
@@ -14,37 +16,25 @@ options::options(int argc, char **argv) noexcept {
         "a lump of coal in your Christmas sock."
     );
 
-    const std::vector<std::string> args(argv + 1, argv + argc);
-    std::set<std::string> encountered;
+    for (int i = 1; i < argc; i++) {
+        auto arg = argv[i];
 
-    for (const auto &arg : args) {
-        if (encountered.contains(arg)) util::die(
-            exit_code::OPTIONS_ERR,
-            "Duplicate argument: '" + arg + "'"
-        );
-
-        if (arg == "-n" || arg == "--no-daemon") {
+        if (match(arg, o::no_daemon)) {
             daemonize = false;
-            encountered.insert("-n");
-            encountered.insert("--no-daemon");
             continue;
         }
 
-        if (arg == "-h" || arg == "--help") {
+        if (match(arg, o::help)) {
             help = true;
             dry_run = true;
-            encountered.insert("-h");
-            encountered.insert("--help");
             continue;
         }
 
-        if (arg == "-s" || arg == "--silent") {
+        if (match(arg, o::silent)) {
             loud = false;
-            encountered.insert("-s");
-            encountered.insert("--silent");
             continue;
         }
 
-        util::die(exit_code::OPTIONS_ERR, "Unknown argument: '" + arg + "'");
+        util::die(exit_code::OPTIONS_ERR, "Unknown argument: '%s'", arg);
     }
 }

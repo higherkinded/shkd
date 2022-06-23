@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <map>
-#include <string>
 #include <vector>
 
 #include <X11/X.h>
@@ -43,8 +42,7 @@ namespace intkb {
             knode *root = new knode;
             knode *current = root;
 
-            bool in_root = true;
-            auto allow_event(const XEvent &ev) -> bool;
+            inline auto allow_event(const XEvent &ev) -> bool;
 
             void push(const key &k) noexcept;
 
