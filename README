@@ -36,7 +36,7 @@ so in `config/preventkeys`.
 
 3. SIZE
 
-Current size on x86_64, glibc and libstdc++ without any configuration is ~40K
+Current size on x86_64, glibc and libstdc++ without any configuration is ~28K
 bytes. Maybe less on 32-bit systems. Every line of configuration you insert adds
 to this, though not too much. Any attemtps at golfing it even further down are
 much appreciated. Not sure why I do it but it's fun.

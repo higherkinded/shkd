@@ -26,5 +26,4 @@ namespace o {
     { "-h", "--help",      "Show this message." };
 
     constexpr option all[] = { no_daemon, silent, help };
-    constexpr int count = sizeof(all) / sizeof(option);
 }

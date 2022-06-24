@@ -1,9 +1,10 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 
 #include <X11/X.h>
+
+#include "types.hh"
 
 namespace dsl {
     using keysym = KeySym;
@@ -24,11 +25,13 @@ namespace dsl {
         keysym  ks;
         uint8_t mask;
 
-        constexpr k(keysym ks, uint8_t mask = 0): ks(ks), mask(mask) {}
+        k(keysym ks, uint8_t mask = 0): ks(ks), mask(mask) {}
+
+        k(): k(0) {}
     };
 
     struct kgrp {
-        std::vector<k> keys;
-        std::vector<const char *> command;
+        ty::array<k> keys;
+        ty::array<const char *> command;
     };
 } // namespace dsl

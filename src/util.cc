@@ -39,7 +39,7 @@ void util::die(int exitcode, const char *fmt, ...) {
 void util::help() {
     std::fprintf(stderr, "Usage: %s [OPTIONS]\n", EXENAME);
 
-    for(const auto & opt : o::all) {
+    for(const auto &opt : o::all) {
         std::fprintf(stderr, "  %s %-11s %s\n",
                 opt.short_switch, opt.long_switch, opt.description);
     }

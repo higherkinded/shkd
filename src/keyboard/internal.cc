@@ -25,30 +25,28 @@ auto key::operator==(const key &k) const noexcept -> bool {
 
 kstate::kstate(
     Display *display,
-    const std::vector<dsl::kgrp> &sequences
+    const ty::array<dsl::kgrp> &sequences
 ) noexcept: display(display), rootwin(XDefaultRootWindow(display)) {
-    if (sequences.empty()) util::die(
+    if (sequences.len == 0) util::die(
         exit_code::NO_SEQUENCES, "No sequences to handle");
 
-    for (const auto &sequence : sequences) {
-        if (!sequence.command.size()) continue;
+    for (int seqid = 0; seqid < sequences.len; seqid++) {
+        auto &sequence = sequences.data[seqid];
 
-        // No exception handler. The program is so tiny that it won't matter. Ever.
-        auto cmd = new std::vector<const char *>;
-        for (const auto &arg : sequence.command) cmd->push_back(arg);
-        cmd->push_back(nullptr);
+        if (!sequence.command.len) continue;
 
         auto cur = root;
 
-        for (const auto &symkey : sequence.keys) {
-            key k{ XKeysymToKeycode(display, symkey.ks), symkey.mask };
+        for (int kid = 0; kid < sequence.keys.len; kid++) {
+            auto &symk = sequence.keys.data[kid];
+            key k{ XKeysymToKeycode(display, symk.ks), symk.mask };
 
             // No exception handler. shkd is virtually zero-cost.
             cur->keys.insert({ k, new knode() });
             cur = cur->keys[k];
         }
 
-        cur->command = (char *const *) cmd->data();
+        cur->command = (char *const *) sequence.command.data;
     }
 
     reset();
@@ -116,6 +114,8 @@ auto kstate::next() noexcept -> bool {
     if (allow_event(event)) {
         push(event.xkey);
         return true;
+    } else {
+        printf("Disallowed event\n");
     }
     return false;
 }

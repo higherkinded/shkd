@@ -2,13 +2,13 @@
 
 #include <cstdint>
 #include <map>
-#include <vector>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
 
 #include "constants.hh"
 #include "keyboard/dsl.hh"
+#include "types.hh"
 
 namespace intkb {
     using keycode = KeyCode;
@@ -52,7 +52,7 @@ namespace intkb {
         public:
             kstate(
                 Display *display,
-                const std::vector<dsl::kgrp> &sequences
+                const ty::array<dsl::kgrp> &sequences
             ) noexcept;
 
             auto next() noexcept -> bool;

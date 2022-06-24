@@ -1,5 +1,4 @@
 #include <cerrno>
-#include <vector>
 
 #include <unistd.h>
 #include <sys/wait.h>
@@ -25,7 +24,7 @@ auto main(int argc, char **argv) noexcept -> int {
     install_sig_handlers();
 
     using namespace dsl;
-    std::vector<kgrp> keys {
+    ty::array<kgrp> keys {
         #include "keys"
     };
 
