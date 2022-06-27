@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstddef>
-#include <cstdio>
 #include <cstdlib>
 #include <initializer_list>
 

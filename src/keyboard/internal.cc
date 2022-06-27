@@ -71,8 +71,8 @@ inline void kstate::exec() noexcept {
             util::warn("Failed to run command:");
             std::fputc('`', stderr);
 
-            for (char *const *arg = current->command; arg++;) {
-                std::fprintf(stderr, " %s", (char *) arg);
+            for (int i = 0; current->command[i]; i++) {
+                std::fprintf(stderr, " %s", (char *) current->command[i]);
             }
 
             std::fprintf(stderr, "`: %s\n", strerror(errno));

@@ -5,6 +5,7 @@
 
 #include <X11/keysym.h>
 #include <X11/XF86keysym.h>
+#include <X11/Xlib.h>
 
 #include "constants.hh"
 #include "keyboard/internal.hh"
@@ -18,6 +19,8 @@ inline void install_sig_handlers();
 inline auto open_display() -> Display *;
 
 auto main(int argc, char **argv) noexcept -> int {
+    XInitThreads();
+
     chdir_home();
     auto display = open_display();
     handle_options(argc, argv);
